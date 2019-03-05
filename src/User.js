@@ -31,15 +31,10 @@ class User extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { user } = nextProps
+        const { user, actions } = nextProps
         if (this.props.user !== user) {
-            this.setState({ users: user}, () => this.changeUser(user))
+            this.setState({ users: user}, () => actions.setUser(user))
         }
-    }
-
-    changeUser = (users) => {
-        const { actions } = this.props
-        actions.setUser(users)
     }
 
     onChange = (e, name) => {
@@ -52,24 +47,25 @@ class User extends Component {
     }
 
     render() {
-        const { user } = this.props
+        const { user, actions } = this.props
         const { firstName, lastName } = this.state.users
         return (
             <div>
                 {
                     users.map((user, index) => (
                         <div key={ `id-${user.id}` } style={ { display: "inline-block" } }>
-                            <button onClick={ () => this.changeUser(user) }>{ `User ${index}` }</button>
+                            <button onClick={ () => actions.setUser(user) }>{ `User ${index}` }</button>
                         </div>
                     ))
                 }
                 <div>
                     <input type="text" onChange={ (e) => this.onChange(e, "firstName") } value={ firstName } />
                     <input type="text" onChange={ (e) => this.onChange(e, "lastName") } value={ lastName } />
-                    <button onClick={ () => this.changeUser(this.state.users) }>Modifier</button>
+                    <button onClick={ () => actions.setUser(this.state.users) }>Modifier</button>
                 </div>
                 <div>
-                    <p>{ `Voici ce qu'il y a dans le state global: id: ${user.id}, firstName: ${user.firstName}, lastName: ${user.lastName}` }</p>
+                    <p>{ `Voici ce qu'il y a dans le state global (au départ de l'appli, il n'y a rien, il est vide): id: ${user.id}, firstName: ${user.firstName}, lastName: ${user.lastName}` }</p>
+                    <p>Et ensuite tu les enregistres dans la base de donnée et rebelote</p>
                 </div>
             </div>
         )
